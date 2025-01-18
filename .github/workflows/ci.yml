@@ -60,20 +60,27 @@ jobs:
     - name: Build Application
       run: |
         make setup && make release
-    - name: Bundle Application
+    - name: Build Frontend
       run: |
-          cargo bundle --format osx --release
-          tar -cvf target/release/bundle/osx/Conductor.app.tar.gz target/release/bundle/osx/Conductor.app
+        export NODE_OPTIONS=--openssl-legacy-provider && make setup && make frontend
+    - name: Build DEB
+      run: |
+          cargo bundle --format deb --release
     - name: rust-clippy-check
       uses: actions-rs/clippy-check@v1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         name: macOS
-    - name: Archive Application
+    - name: Archive Raw Application
       uses: actions/upload-artifact@v4
       with:
-        name: Conductor.app.tar.gz
-        path: target/release/bundle/osx/Conductor.app.tar.gz
+        name: Conductor_ubuntu-latest
+        path: target/release/conductor
+    - name: Archive DEB
+      uses: actions/upload-artifact@v4
+      with:
+          name: Conductor.deb
+          path: target/release/bundle/deb/*.deb
   fmt:
     runs-on: ubuntu-latest
     steps:
