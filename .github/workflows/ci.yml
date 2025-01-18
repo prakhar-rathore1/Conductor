@@ -44,6 +44,36 @@ jobs:
       with:
           name: Conductor.deb
           path: target/release/bundle/deb/*.deb
+  build-macos:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: rust-toolchain
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+        components: clippy
+    - name: Install Cargo tools
+      run: |
+          cargo install cargo-bundle
+    - name: Build Application
+      run: |
+        make setup && make release
+    - name: Bundle Application
+      run: |
+          cargo bundle --format osx --release
+          tar -cvf target/release/bundle/osx/Conductor.app.tar.gz target/release/bundle/osx/Conductor.app
+    - name: rust-clippy-check
+      uses: actions-rs/clippy-check@v1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        name: macOS
+    - name: Archive Application
+      uses: actions/upload-artifact@v4
+      with:
+        name: Conductor.app.tar.gz
+        path: target/release/bundle/osx/Conductor.app.tar.gz
   fmt:
     runs-on: ubuntu-latest
     steps:
