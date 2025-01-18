@@ -9,7 +9,7 @@ jobs:
   build-ubuntu:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: rust-toolchain
       uses: actions-rs/toolchain@v1
       with:
@@ -47,7 +47,7 @@ jobs:
   build-macos:
     runs-on: macos-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: rust-toolchain
       uses: actions-rs/toolchain@v1
       with:
@@ -70,14 +70,14 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
         name: macOS
     - name: Archive Application
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: Conductor.app.tar.gz
         path: target/release/bundle/osx/Conductor.app.tar.gz
   fmt:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: rust-toolchain
         uses: actions-rs/toolchain@v1
         with:
